@@ -5,7 +5,7 @@ This document describes briefly the steps required to start use of LWM2M Client 
 ## Required hardware
 
 This demo uses Freescale FRDM-K64F board
-* [FRDM-K64F](http://developer.mbed.org/platforms/frdm-k64f/)* 
+* [FRDM-K64F](http://developer.mbed.org/platforms/frdm-k64f/)*
 An ethernet connection to the internet
 An ethernet cable
 A micro-USB cable
@@ -20,9 +20,9 @@ A micro-USB cable
 
 ### IP address setup
 
-mbed Client example uses ethernet and IPv4 to communicate with mbed Devce Server. 
+mbed Client example uses ethernet and IPv4 to communicate with mbed Devce Server.
 You must ensure that you have a working IPv4 enabled wired ethernet/internet connection which have DHCP resolving capability plugged directly into RJ45 port of the board so that there is no need to setup static IP address.
- 
+
 ### mbed Device Server (mDS)
 
 Demo application will register to mbed Device Server using OMA lwm2m bootstrap. You should install mDS test version with bootstrap server on your local computer. Refer to mbed Device Server documentation for installing instructions.
@@ -48,7 +48,7 @@ Binary file will be created to /build/frdm-k64f-gcc/source/ - folder
 
 ### Flashing to target device
 
-You need to plug in the USB cable on J26 port on the K64F borad and other end into  USB port of your computer. 
+You need to plug in the USB cable on J26 port on the K64F borad and other end into  USB port of your computer.
 Supported mbed board have drag&drop flashing capability. All you need to do is to copy the binary file to
 board's usb mass storage device and it will be automatically flashed to target MCU after reset.
 You can find the binary file from `cd lwm2m-client-example/build/frdm-k64f-gcc/test/helloworld-lwm2mclient/` with following name `lwm2m-client-example-test-helloworld-lwm2mclient.bin`
@@ -77,10 +77,10 @@ Remember, that you will need to add your end-point name for e.g: `lwm2m-endpoint
 The above steps will power up node. Now node application will start bootstrap process with OMA LWM2M bootstrap server. After received needed information application will send CoAP registration message to mbed Device Server.
 
 After registration, you can see your endpoint in mbed Device Server through web UI. Open web UI and select tab "End-points"
-You can also see resources registered from that endpoint. 
-![Node registered](https://github.com/ARMmbed/lwm2m-client-example/blob/master/img/registered.jpg)
+You can also see resources registered from that endpoint.
+![Node registered](img/registered.jpg)
 
 You can click endpoint name to open view to see your registered resources. However, making request to resources is not implemented in this release.
-![Resource list](https://github.com/ARMmbed/lwm2m-client-example/blob/master/img/endpoint_resources.jpg)
+![Resource list](img/endpoint_resources.jpg)
 
 Pressing button SW2 will cause endpoint to send unregister message to device server. After successful unregistration, led D12 starts blinking indicating that application has successfully completed and endpoint will disappear from endpoint list in web UI.
