@@ -38,11 +38,10 @@ Go to downloads/Evaluation product/SEN00 – Sensinode/Development tools/Nanoser
 2. Connect the frdm-k64f to the computer with the micro-USB cable, being careful to use the micro-usb port labled "OpenSDA"
 3. Install Yotta. See instructions from http://docs.yottabuild.org/#installing
 4. Install needed toolchains (arm-none-eabi-gcc). Refer to the yotta installation page (in step 1 above) for instructions on how do install the toolchains.
-5. Clone **lwm2m-client-example** from https://github.com/ARMmbed/lwm2m-client-example
-6. `cd ` **lwm2m-client-example**
-7. Open file main.cpp, edit your mbed Device Server's Ipv4 address and port number in place of  `<xxx.xxx.xxx.xxx>` and `<port>` in `coap://<xxx.xxx.xxx.xxx>:<port>` so that it looks something like this `coap://192.168.0.1:5693`
-8. Set up target device, `yotta target frdm-k64f-gcc`
-9. Type `yotta build`
+5. `cd ` **lwm2m-client-example**
+6. Open file main.cpp, edit your mbed Device Server's Ipv4 address and port number in place of  `<xxx.xxx.xxx.xxx>` and `<port>` in `coap://<xxx.xxx.xxx.xxx>:<port>` so that it looks something like this `coap://192.168.0.1:5693`
+7. Set up target device, `yotta target frdm-k64f-gcc`
+8. Type `yotta build`
 
 Binary file will be created to /build/frdm-k64f-gcc/source/ - folder
 
