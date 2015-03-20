@@ -21,7 +21,6 @@
 <li>Connect the frdm-k64f to the computer with the micro-USB cable, being careful to use the micro-usb port labled &quot;OpenSDA&quot;</li>
 <li>Install Yotta. See instructions from http://docs.yottabuild.org/#installing</li>
 <li>Install needed toolchains (arm-none-eabi-gcc). Refer to the yotta installation page (in step 1 above) for instructions on how do install the toolchains.</li>
-<li>Clone <strong>lwm2m-client-example</strong> from https://github.com/ARMmbed/lwm2m-client-example</li>
 <li><code>cd</code> <strong>lwm2m-client-example</strong></li>
 <li>Open file main.cpp, edit your mbed Device Server's Ipv4 address and port number in place of <code>&lt;xxx.xxx.xxx.xxx&gt;</code> and <code>&lt;port&gt;</code> in <code>coap://&lt;xxx.xxx.xxx.xxx&gt;:&lt;port&gt;</code> so that it looks something like this <code>coap://192.168.0.1:5693</code></li>
 <li>Set up target device, <code>yotta target frdm-k64f-gcc</code></li>
