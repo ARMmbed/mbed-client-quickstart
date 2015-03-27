@@ -49,7 +49,7 @@ Unzip the package in your local computer. You should see following folders:
 2. device-server-devel-x.x.x
 3. docs
 4. mbed-client-x.x.x
-5.. Go to `bin` folder in the  `device-server-devel-x.x.x` package that you extracted.
+5. Go to `bin` folder in the  `device-server-devel-x.x.x` package that you extracted.
 6. Run the start script:
     - If you are using Linux OS, run the `runDS.sh` in a new shell.
     - If you are using Windows, run the `runDS.bat` in a new command prompt.
