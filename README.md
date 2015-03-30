@@ -20,9 +20,7 @@ This document describes briefly the steps required to start use of LWM2M Client 
 There are 3 main phases to this example:
 
 - Download and run mDS server on computer
-
-- Configure lwm2m-client-example application  with server address, build with yotta, load onto board, plug board into ethernet
-
+- Configure example mbed program with server address, build with yotta, load onto board, plug board into ethernet
 - Verify board talks to server
 
 Note: You might need to open UDP port 5683 in your computer's firewall for mDS to communicate with this example application.
@@ -35,30 +33,46 @@ If your network does not have DHCP enabled you will have to manually assign a st
 
 ### Download mbed Device Server (mDS)
 
-Example application will register to mbed Device Server. You should install mDS on your local computer. Refer to mDS documentation for installing instructions.
+Example application will register to mbed Device Server. You should install mDS on your local computer.
 
-You can download the free developer version, which is used with this example, from [here](https://silver.arm.com/browse/SEN00).
-
-Download NanoService Developer package.
+1. Download the free developer version, which is used with this example, from [ARM silver](https://silver.arm.com/browse/SEN00).
+2. Unzip the package on your local computer. You should see the following files:
+```
+Device Server.tar.gz
+Device Server Clients.tar.gz
+Device Server Tools.tar.gz
+Ref Apps.tar.gz
+```
 
 ### Starting the mbed Device Server (mDS)
 
-Unzip the package in your local computer. You should see following folders:
+1. In the folder of the mDS package you unzipped (see [Download mbed Device Server (mDS)](#download-mbed-device-server-mds)), unzip the file `Device Server.tar.gz`. You should see the following folders:
 
-1. connected-home-trial-x.x.x
-2. device-server-devel-x.x.x
-3. docs
-4. mbed-client-x.x.x
-5. Go to `bin` folder in the  `device-server-devel-x.x.x` package that you extracted.
-6. Run the start script:
+        device-server-devel-2.2.0-606
+        docs
+        mbed-client-2.20-604
+
+2. Go to the folder `device-server-devel-2.2.0-606/bin`. You will see the following start scripts:
+
+        runDS.bat
+        runDS.sh
+
+3. Run the appropriate start script:
     - If you are using Linux OS, run the `runDS.sh` in a new shell.
     - If you are using Windows, run the `runDS.bat` in a new command prompt.
 
-This will start the mbed Device Server on your system.
+This will start mDS on your system.
 
 #### Starting the Connected Home WebUI ("ConnectedHome" reference app)
-7. Go to the `bin` folder in `connected-home-trial-x.x.x` that you extracted.
-8. Run the start script:
+
+1. In the folder of the mDS package you unzipped (see [Download mbed Device Server (mDS)](#download-mbed-device-server-mds)), unzip the file `Ref Apps.tar.gz`.
+
+2. Go to the folder `connected-home-trial-2.2.0-610/bin`. You will see the following start scripts:
+
+        runConnectedHome.bat
+        runConnectedHome.sh
+
+3. Run the appropriate start script:
     - If you are using Linux OS, run the `runConnectedHome.sh` in a new shell.
     - If you are using Windows, run the `runConnectedHome.bat` in a new command prompt.
 
@@ -67,23 +81,27 @@ This will start the WebUI on your system.
 ## mbed Build instructions
 
 ### Building
-1. Connect the frdm-k64f to the internet using the ethernet cable
-2. Connect the frdm-k64f to the computer with the micro-USB cable, being careful to use the micro-usb port labled "OpenSDA"
-3. Install Yotta. See instructions from http://docs.yottabuild.org/#installing
-4. Install needed toolchains (arm-none-eabi-gcc). Refer to the yotta installation page (in step 1 above) for instructions on how do install the toolchains.
-5. cd  `lwm2m-client-example\test\helloworld-lwm2mclient`
-6. Open file main.cpp, edit your mbed Device Server's Ipv4 address and port number in place of `coap://<xxx.xxx.xxx.xxx>:5683`. For example, if your server's IP address is `192.168.0.1`, you would enter `coap://192.168.0.1:5683`
-7. Set up target device, `yotta target frdm-k64f-gcc`
-8. Type `yotta build`
 
-Binary file will be created to /build/frdm-k64f-gcc/test/ - folder
+1. If you have not already done so, install Yotta and the needed toolchains. See the instructions at http://docs.yottabuild.org/#installing.
+2. Open the file `lwm2m-client-example/test/helloworld-lwm2mclient/main.cpp`.
+3. Edit your mbed Device Server's Ipv4 address and port number in place of `coap://<xxx.xxx.xxx.xxx>:5683`.
+  - For example, if your server's IP address is `123.123.123.123`, you would enter `coap://123.123.123.123:5683`.
+4. Open a shell (or command prompt if using Windows) and navigate to the `lwm2m-client-example` folder.
+5. Run the following commands:
+```
+yotta target frdm-k64f-gcc
+yotta build
+```
+
+A binary file should be created at `lwm2m-client-example/build/frdm-k64f-gcc/test/` named `lwm2m-client-example-test-helloworld-lwm2mclient.bin`. This will be flashed to the mbed board in the following steps.
 
 ### Flashing to target device
 
-You need to plug in the USB cable on J26 port on the K64F board and other end into  USB port of your computer.
-Supported mbed board have drag&drop flashing capability. All you need to do is to copy the binary file to board's usb mass storage device and it will be automatically flashed to target MCU after reset.
-You can find the binary file from `lwm2m-client-example/build/frdm-k64f-gcc/test/` with following name `lwm2m-client-example-test-helloworld-lwm2mclient.bin`
-Press the reset button to run the program.
+1. Connect the frdm-k64f to the internet using an ethernet cable
+2. Connect the frdm-k64f to your computer with a micro-USB cable, being careful to use the micro-usb port labled "OpenSDA" on the bottom of the board.
+3. Find the binary file named `lwm2m-client-example-test-helloworld-lwm2mclient.bin` in the folder  `lwm2m-client-example/build/frdm-k64f-gcc/test/`. Drag and drop the file onto the "MBED" drive on your computer.
+
+The board will be programmed when the LED stops flashing. Press the reset button to run the program.
 
 ## Testing
 
@@ -91,27 +109,22 @@ Press the reset button to run the program.
 
 1. Start Wireshark on the computer where the mbed Device Server is running
 2. Select your ethernet interface, usually "Local Area Connection"
-3. Click start
-4. Select "filter" field on top and add a filter to correspond your mbed Device Server port.
-5. Power up your mbed board
+3. Click **Start**
+4. Select the "Filter" field in the toolbar and add a filter to correspond to your mbed Device Server. Press Enter after you have entered the expression to activate the filter.
+  - For example, if your server's IP address is `123.123.123.123`, you would enter `ip.addr == 123.123.123.123` and press Enter.
+5. Power up your mbed board and press the reset button.
 
 You should see the endpoint after it has registered with the mbed Device Server.
 
 ### Testing lwm2m example application with mbed Device Server
 
-Ensure that mDS, and the WebUI are all running. These services must be started and configured before the mbed is powered up. See [Setting up the environment](#setting-up-the-environment) to set up these services.
-
-Power up your mbed. Ensure that you have flashed the program ([Flashing to target device](#flashing-to-target-device)). Press the reset button to start the program.
+Ensure that mDS and the WebUI are running (see [Setting up the environment](#setting-up-the-environment)). Also, ensure that you have flashed the program to your mbed (see [Flashing to target device](#flashing-to-target-device)).
 
 1. Open the WebUI by navigating to http://localhost:8082.
     - If you're working from a remote machine, you'll need to use the host machine's IP address instead of "localhost".
 2. Enter `demo` as both the username and password.
 3. Go to the **End-points** tab. After a short time your device should appear in the list (Refresh the page to update the list).
-
 ![Node registered](img/registered.jpg)
 
 4. Click the endpoint name to view the registered resources. In this release, making requests to resources is not currently implemented.
-
 ![Resource list](img/endpoint_resources.jpg)
-
-Pressing button SW2 will cause the endpoint to send an unregister message to the device server. After successful unregistration, led D12 will start blinking indicating that the application has successfully completed and the endpoint will disappear from the endpoint list in the WebUI.
