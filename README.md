@@ -35,7 +35,7 @@ If your network does not have DHCP enabled you will have to manually assign a st
 
 Example application will register to mbed Device Server. You should install mDS on your local computer.
 
-1. Download the free developer version, which is used with this example, from [here](https://silver.arm.com/browse/SEN00).
+1. Download the free developer version, which is used with this example, from [ARM silver](https://silver.arm.com/browse/SEN00).
 2. Unzip the package on your local computer. You should see the following files:
 ```
 Device Server.tar.gz
@@ -46,18 +46,16 @@ Ref Apps.tar.gz
 
 ### Starting the mbed Device Server (mDS)
 
-1. In the folder of the mDS package you unzipped (see [Starting the mbed Device Server (mDS)](#starting-the-mbed-device-server-mds)), unzip the file `Device Server.tar.gz`. You should see the following folders:
-```
-device-server-devel-2.2.0-606
-docs
-mbed-client-2.20-604
-```
+1. In the folder of the mDS package you unzipped (see [Download mbed Device Server (mDS)](#download-mbed-device-server-mds)), unzip the file `Device Server.tar.gz`. You should see the following folders:
+
+        device-server-devel-2.2.0-606
+        docs
+        mbed-client-2.20-604
 
 2. Go to the folder `device-server-devel-2.2.0-606/bin`. You will see the following start scripts:
-```
-runDS.bat
-runDS.sh
-```
+
+        runDS.bat
+        runDS.sh
 
 3. Run the appropriate start script:
     - If you are using Linux OS, run the `runDS.sh` in a new shell.
@@ -67,13 +65,12 @@ This will start mDS on your system.
 
 #### Starting the Connected Home WebUI ("ConnectedHome" reference app)
 
-1. In the folder of the mDS package you unzipped (see [Starting the mbed Device Server (mDS)](#starting-the-mbed-device-server-mds)), unzip the file `Ref Apps.tar.gz`.
+1. In the folder of the mDS package you unzipped (see [Download mbed Device Server (mDS)](#download-mbed-device-server-mds)), unzip the file `Ref Apps.tar.gz`.
 
 2. Go to the folder `connected-home-trial-2.2.0-610/bin`. You will see the following start scripts:
-```
-runConnectedHome.bat
-runConnectedHome.sh
-```
+
+        runConnectedHome.bat
+        runConnectedHome.sh
 
 3. Run the appropriate start script:
     - If you are using Linux OS, run the `runConnectedHome.sh` in a new shell.
@@ -112,7 +109,7 @@ The board will be programmed when the LED stops flashing. Press the reset button
 
 1. Start Wireshark on the computer where the mbed Device Server is running
 2. Select your ethernet interface, usually "Local Area Connection"
-3. Click start
+3. Click **Start**
 4. Select the "Filter" field in the toolbar and add a filter to correspond to your mbed Device Server. Press Enter after you have entered the expression to activate the filter.
   - For example, if your server's IP address is `123.123.123.123`, you would enter `ip.addr == 123.123.123.123` and press Enter.
 5. Power up your mbed board and press the reset button.
@@ -121,9 +118,7 @@ You should see the endpoint after it has registered with the mbed Device Server.
 
 ### Testing lwm2m example application with mbed Device Server
 
-Ensure that mDS and the WebUI are running. See [Setting up the environment](#setting-up-the-environment) to set up these services.
-
-Power up your mbed. Ensure that you have flashed the program ([Flashing to target device](#flashing-to-target-device)). Press the reset button to start the program.
+Ensure that mDS and the WebUI are running (see [Setting up the environment](#setting-up-the-environment)). Also, ensure that you have flashed the program to your mbed (see [Flashing to target device](#flashing-to-target-device)).
 
 1. Open the WebUI by navigating to http://localhost:8082.
     - If you're working from a remote machine, you'll need to use the host machine's IP address instead of "localhost".
