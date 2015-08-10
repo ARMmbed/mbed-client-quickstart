@@ -32,7 +32,7 @@ M2MSecurity::SecurityModeType CONN_MODE = M2MSecurity::NoSecurity;
 
 // Enter your mbed Device Server's IPv4 address and Port number in
 // mentioned format like coap://192.168.0.1
-const String &MBED_SERVER_ADDRESS = "coap://<xxx.xxx.xxx.xxx>";
+const String &MBED_SERVER_ADDRESS = "coap://10.45.3.10";
 //If you use secure connection port is 5684, for non-secure port is 5683
 const int &MBED_SERVER_PORT = 5683;
 
