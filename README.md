@@ -50,7 +50,7 @@ Ref Apps.tar.gz
 
 ### Starting the mbed Device Server (mDS)
 
-1. Go to the `Device Server/bin` folder of the `Device Server.tar.gz` archive that you extracted.
+1. Go to the `Device Server/device-server-devel-x.x.x-xxx/bin` folder of the `Device Server.tar.gz` archive that you extracted.
 2. Run the start script:
     - If you are using Mac OS X or Linux, run the `runDS.sh` in a new shell.
     - If you are using Windows, run the `runDS.bat` in a new command prompt.
