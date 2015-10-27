@@ -29,6 +29,8 @@
 
 using namespace mbed::util;
 
+Serial output(USBTX, USBRX);
+
 //Select binding mode: UDP or TCP
 M2MInterface::BindingMode SOCKET_MODE = M2MInterface::UDP;
 
@@ -72,6 +74,10 @@ public:
             delete _register_security;
         }
     }
+
+    void trace_printer(const char* str) {
+        output.printf("%s\r\n", str);
+        }
 
     void create_interface() {
         // Creates M2MInterface using which endpoint can
@@ -191,7 +197,7 @@ public:
         if(server_object) {
             _bootstrapped = true;
             _error = false;
-            printf("\nBootstrapped\n");
+            trace_printer("\nBootstrapped\n");
         }
     }
 
@@ -201,7 +207,7 @@ public:
     void object_registered(M2MSecurity */*security_object*/, const M2MServer &/*server_object*/){
         _registered = true;
         _unregistered = false;
-        printf("\nRegistered\n");
+        trace_printer("\nRegistered\n");
     }
 
     //Callback from mbed client stack when the unregistration
@@ -212,7 +218,7 @@ public:
         _registered = false;
         notify_completion(_unregistered);
         minar::Scheduler::stop();
-        printf("\nUnregistered\n");
+        trace_printer("\nUnregistered\n");
     }
 
     void registration_updated(M2MSecurity */*security_object*/, const M2MServer & /*server_object*/){
@@ -221,16 +227,49 @@ public:
     //Callback from mbed client stack if any error is encountered
     // during any of the LWM2M operations. Error type is passed in
     // the callback.
-    void error(M2MInterface::Error /*error*/){
-        _error = true;
-        printf("\nError occured\n");
+    void error(M2MInterface::Error error){
+        _error = true;         
+            switch(error){
+            case (1): 
+                trace_printer("[ERROR:] Already Exists\n");
+                break;
+            case (2): 
+                trace_printer("[ERROR:] Bootstrap failed.\n");
+                break;
+            case (3): 
+                trace_printer("[ERROR:] Invalid Parameters.\n");
+                break;
+            case (4): 
+                trace_printer("[ERROR:] Not Registered.\n");
+                break;
+            case (5): 
+                trace_printer("[ERROR:] Timeout.\n");
+                break;
+            case (6): 
+                trace_printer("[ERROR:] Network Error.\n");
+                break;
+            case (7): 
+                trace_printer("[ERROR:] Response Parse Failed..\n");
+                break;
+            case (8): 
+                trace_printer("[ERROR:] Unknown Error.\n");
+                break;
+            case (9): 
+                trace_printer("[ERROR:] Memory Fail.\n");
+                break;
+            case (10): 
+                trace_printer("[ERROR:] Operation not allowed.\n");
+                break;
+            default:
+                break;
+        }
     }
 
     //Callback from mbed client stack if any value has changed
     // during PUT operation. Object and its type is passed in
     // the callback.
     void value_updated(M2MBase *base, M2MBase::BaseType type) {
-        printf("\nValue updated of Object name %s and Type %d\n",
+        output.printf("\nValue updated of Object name %s and Type %d\n",
                base->name().c_str(), type);
     }
 
@@ -268,6 +307,9 @@ InterruptIn obs_button(OBS_BUTTON);
 InterruptIn unreg_button(UNREG_BUTTON);
 
 void app_start(int /*argc*/, char* /*argv*/[]) {
+
+	//Sets the console baud-rate
+    output.baud(115200);
 
     // This sets up the network interface configuration which will be used
     // by LWM2M Client API to communicate with mbed Device server.
