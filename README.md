@@ -19,9 +19,10 @@ To set up the environment, you need to do the following:
 
 1. Go to [mbed Device Connector website](https://connector.mbed.com) and log in with your mbed.org account.
 2. Configure the mbed Client example program with desired parameters. See [mbed Build instructions](#mbed-build-instructions) chapter for more information.
-3. Build the application with yotta.
-4. Plug the Ethernet cable to the board.
-5. Load the application to the FRDM-K64F board.
+3. Set yotta's target for this project, eg, yotta target frdm-k64f-gcc
+4. Build the application with yotta.
+5. Plug the Ethernet cable to the board.
+6. Load the application to the FRDM-K64F board.
 
 ### IP address setup
 
