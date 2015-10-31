@@ -11,7 +11,7 @@
   "dependencies": {
     "mbed-client": "^1.0.0",
     "sockets": "^1.0.2",
-    "mbed-example-network": "~0.1.8",
+    "mbed-example-network": "^1.0.1",
     "mbed-client-mbed-os": "^1.1.0",
     "minar": "^1.0.0"
   },
