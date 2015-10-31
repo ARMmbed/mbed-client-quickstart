@@ -273,6 +273,7 @@ void app_start(int /*argc*/, char* /*argv*/[]) {
     eth.connect();
 
     lwipv4_socket_init();
+    printf("IP address %s\r\n", eth.getIPAddress());
 
     // Instantiate the class which implements
     // LWM2M Client API
