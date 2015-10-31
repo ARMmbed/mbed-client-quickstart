@@ -197,7 +197,7 @@ public:
         if(server_object) {
             _bootstrapped = true;
             _error = false;
-            printf("\nBootstrapped\n");
+            printf("\r\nBootstrapped\r\n");
         }
     }
 
@@ -207,7 +207,7 @@ public:
     void object_registered(M2MSecurity */*security_object*/, const M2MServer &/*server_object*/){
         _registered = true;
         _unregistered = false;
-        printf("\nRegistered\n");
+        printf("\r\nRegistered\r\n");
     }
 
     //Callback from mbed client stack when the unregistration
@@ -218,7 +218,7 @@ public:
         _registered = false;
         notify_completion(_unregistered);
         minar::Scheduler::stop();
-        printf("\nUnregistered\n");
+        printf("\r\nUnregistered\r\n");
     }
 
     void registration_updated(M2MSecurity */*security_object*/, const M2MServer & /*server_object*/){
@@ -229,14 +229,14 @@ public:
     // the callback.
     void error(M2MInterface::Error /*error*/){
         _error = true;
-        printf("\nError occured\n");
+        printf("\r\nError occured\r\n");
     }
 
     //Callback from mbed client stack if any value has changed
     // during PUT operation. Object and its type is passed in
     // the callback.
     void value_updated(M2MBase *base, M2MBase::BaseType type) {
-        printf("\nValue updated of Object name %s and Type %d\n",
+        printf("\r\nValue updated of Object name %s and Type %d\r\n",
                base->name().c_str(), type);
     }
 
@@ -273,6 +273,7 @@ void app_start(int /*argc*/, char* /*argv*/[]) {
     eth.connect();
 
     lwipv4_socket_init();
+    printf("IP address %s\r\n", eth.getIPAddress());
 
     // Instantiate the class which implements
     // LWM2M Client API
