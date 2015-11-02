@@ -34,6 +34,9 @@ Serial output(USBTX, USBRX);
 //Select binding mode: UDP or TCP
 M2MInterface::BindingMode SOCKET_MODE = M2MInterface::UDP;
 
+//Select binding mode: UDP or TCP
+M2MInterface::BindingMode SOCKET_MODE = M2MInterface::UDP;
+
 // This is address to mbed Device Connector
 const String &MBED_SERVER_ADDRESS = "coap://api.connector.mbed.com:5684";
 
@@ -84,9 +87,9 @@ public:
         // setup its name, resource type, life time, connection mode,
         // Currently only LwIPv4 is supported.
 
-	// Randomizing listening port for Certificate mode connectivity
-	srand(time(NULL));
-	uint16_t port = rand() % 65535 + 12345;
+        // Randomizing listening port for Certificate mode connectivity
+        srand(time(NULL));
+        uint16_t port = rand() % 65535 + 12345;
 
         _interface = M2MInterfaceFactory::create_interface(*this,
                                                   ENDPOINT_NAME,
