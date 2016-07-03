@@ -10,7 +10,8 @@
   "extraIncludes": [],
   "dependencies": {
     "mbed-client": "^1.0.0",
-    "mbed-trace": "^1.0.0"
+    "mbed-trace": "^1.2.1",
+    "mbed-cloud-client": "ARMmbed/mbed-cloud-client#proto"
   },
   "targetDependencies": {},
   "bin": "./source/"
