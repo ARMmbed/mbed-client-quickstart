@@ -27,6 +27,7 @@
 #include "mbed-client/m2mobject.h"
 #include "mbed-client/m2mobjectinstance.h"
 #include "mbed-client/m2mresource.h"
+#include "mbed-client/m2mblockmessage.h"
 #include "minar/minar.h"
 #include "security.h"
 
@@ -95,9 +96,9 @@ public:
     *  Currently only LwIPv4 is supported.
     */
     void create_interface() {
-	// Randomizing listening port for Certificate mode connectivity
-	srand(time(NULL));
-	uint16_t port = rand() % 65535 + 12345;
+    // Randomizing listening port for Certificate mode connectivity
+    srand(time(NULL));
+    uint16_t port = rand() % 65535 + 12345;
 
     // create mDS interface object, this is the base object everything else attaches to
     _interface = M2MInterfaceFactory::create_interface(*this,

@@ -85,7 +85,7 @@ public:
         return led_object;
     }
 
-    void blink(void *) {
+    void blink(void *argument) {
         // read the value of 'Pattern'
         M2MObjectInstance* inst = led_object->object_instance();
         M2MResource* res = inst->resource("5853");
@@ -104,6 +104,17 @@ public:
         while (std::getline(ss, item, ':')) {
             // then convert to integer, and push to the vector
             v->push_back(atoi((const char*)item.c_str()));
+        }
+        // check if POST contains payload
+        if (argument) {
+            M2MResource::M2MExecuteParameter* param = (M2MResource::M2MExecuteParameter*)argument;
+            String object_name = param->get_argument_object_name();
+            uint16_t object_instance_id = param->get_argument_object_instance_id();
+            String resource_name = param->get_argument_resource_name();
+            int payload_length = param->get_argument_value_length();
+            uint8_t* payload = param->get_argument_value();
+            output.printf("Resource: %s/%d/%s executed\r\n", object_name.c_str(), object_instance_id, resource_name.c_str());
+            output.printf("Payload: %.*s\r\n", payload_length, payload);
         }
 
         output.printf("led_execute_callback pattern=%s\r\n", s.c_str());
@@ -134,6 +145,59 @@ private:
         // and invoke it after `delay_ms` (upping position)
         minar::Scheduler::postCallback(fp.bind(pattern, ++position)).delay(minar::milliseconds(delay_ms));
     }
+};
+
+/*
+ * The button contains one property (click count).
+ * When `handle_button_click` is executed, the counter updates.
+ */
+class BigPayloadResource {
+public:
+    BigPayloadResource() {
+        big_payload = M2MInterfaceFactory::create_object("1000");
+        M2MObjectInstance* payload_inst = big_payload->create_object_instance();
+        M2MResource* payload_res = payload_inst->create_dynamic_resource("1", "BigData",
+            M2MResourceInstance::STRING, true /* observable */);
+        payload_res->set_operation(M2MBase::GET_PUT_ALLOWED);
+        payload_res->set_value((uint8_t*)"0", 1);
+        payload_res->set_incoming_block_message_callback(
+                    incoming_block_message_callback(this, &BigPayloadResource::block_message_received));
+        payload_res->set_outgoing_block_message_callback(
+                    outgoing_block_message_callback(this, &BigPayloadResource::block_message_requested));
+    }
+
+    M2MObject* get_object() {
+        return big_payload;
+    }
+
+    void block_message_received(M2MBlockMessage *argument) {
+        if (argument) {
+            if (M2MBlockMessage::ErrorNone == argument->error_code()) {
+                if (argument->is_last_block()) {
+                    output.printf("Last block received\r\n");
+                }
+                output.printf("Block number: %d\r\n", argument->block_number());
+                // First block received
+                if (argument->block_number() == 0) {
+                    // Store block
+                // More blocks coming
+                } else {
+                    // Store blocks
+                }
+            } else {
+                output.printf("Error when receiving block message!  - EntityTooLarge");
+            }
+            output.printf("Total message size: %d\r\n", argument->total_message_size());
+        }
+    }
+
+    void block_message_requested(const String& resource, uint8_t *&/*data*/, uint32_t &/*len*/) {
+        output.printf("GET request received for resource: %s\r\n", resource.c_str());
+        // Copy data and length to coap response
+    }
+
+private:
+    M2MObject*  big_payload;
 };
 
 /*
@@ -207,6 +271,7 @@ void app_start(int /*argc*/, char* /*argv*/[]) {
     // we create our button and LED resources
     auto button_resource = new ButtonResource();
     auto led_resource = new LedResource();
+    auto big_payload_resource = new BigPayloadResource();
 
     // Unregister button (SW3) press will unregister endpoint from connector.mbed.com
     unreg_button.fall(&mbed_client, &MbedClient::test_unregister);
@@ -228,6 +293,7 @@ void app_start(int /*argc*/, char* /*argv*/[]) {
     object_list.push_back(device_object);
     object_list.push_back(button_resource->get_object());
     object_list.push_back(led_resource->get_object());
+    object_list.push_back(big_payload_resource->get_object());
 
     // Set endpoint registration object
     mbed_client.set_register_object(register_object);
