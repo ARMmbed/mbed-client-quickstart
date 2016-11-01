@@ -1,3 +1,5 @@
+**THIS EXAMPLE IS DEPRECATED AND IS SUPERCEDED BY ANOTHER EXAMPLE AVAILABLE HERE [mbed-os-example-client](https://github.com/ARMmbed/mbed-os-example-client)**
+
 # Getting started with mbed Client on mbed OS
 
 This is the mbed Client example for mbed OS (we also have one for [Linux](https://github.com/ARMmbed/mbed-client-linux-example)). It demonstrates how to register a device with mbed Device Connector, how to read and write values, and how to deregister. If you are unfamiliar with mbed Device Connector, we recommend that you read [the introduction to the data model](https://docs.mbed.com/docs/mbed-device-connector-web-interfaces/en/latest/#the-mbed-device-connector-data-model) first.
