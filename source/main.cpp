@@ -23,6 +23,8 @@
 #include <vector>
 #include "mbed-trace/mbed_trace.h"
 
+#include "mbed-cloud-client/ServiceClient.h"
+
 using namespace mbed::util;
 
 Serial &output = get_stdio_serial();
@@ -36,6 +38,44 @@ struct MbedClientDevice device = {
     "ModelNumber_String",       // ModelNumber
     "SerialNumber_String"       // SerialNumber
 };
+
+// XXX: harmonize these two structs
+static const MbedClientDeviceInfo config = {
+    "Manufacturer_String",      // Manufacturer
+    "Type_String",              // Type
+    "ModelNumber_String",       // ModelNumber
+    "SerialNumber_String"       // SerialNumber
+};
+
+static const MBedClientInterfaceInfo interface_config = {
+    ENDPOINT_NAME,            // endpoint name string
+    "test",                   // endpoint type string
+    100,                      // lifetime
+    0,                        // listen port
+    MBED_USER_NAME_DOMAIN,    // domain string
+    SOCKET_MODE,              // binding mode
+    M2MInterface::LwIP_IPv4,  // network stack
+    ""                        // context address string
+};
+
+// This is address to mbed Device Connector
+static const char* MBED_SERVER_URI = "coap://api.connector.mbed.com:5684";
+
+// XXX: this struct will move to ServiceClient when it gets capability to obtain
+// the keys from backend.
+static const struct MBedClientServerInfo server_config = {
+    MBED_SERVER_URI,
+    M2MSecurity::Certificate,
+    SERVER_CERT,
+    sizeof(SERVER_CERT),
+    CERT,
+    sizeof(CERT),
+    KEY,
+    sizeof(KEY)
+};
+
+static ServiceClient service_client(config, interface_config);
+static M2MObjectList client_object_list;
 
 // Instantiate the class which implements LWM2M Client API (from simpleclient.h)
 MbedClient mbed_client(device);
@@ -249,6 +289,25 @@ private:
     uint16_t counter = 0;
 };
 
+class ServiceClientCallbackHandler : public ServiceClientCallback {
+public:
+    // TBD:
+    // * Should we have a progress information available, so the client would
+    //   get some feedback for the duration of process.
+    // * Or should it just get the callback saying success/failure at end
+    //   of the sequence.
+    // * At least we should not have two callbacks, one for progress and
+    //   one for end of it.
+    // virtual void progress(StartupMainState state, int status);
+    virtual void complete(int status)
+    {
+        printf("ServiceClientCallbackHandler::complete(): %d", status);
+    }
+};
+
+static ServiceClientCallbackHandler serv_cch;
+
+
 void app_start(int /*argc*/, char* /*argv*/[]) {
 
     //Sets the console baud-rate
@@ -279,6 +338,7 @@ void app_start(int /*argc*/, char* /*argv*/[]) {
     // Observation Button (SW2) press will send update of endpoint resource values to connector
     obs_button.fall(button_resource, &ButtonResource::handle_button_click);
 
+#if USE_SIMPLE_CLIENT
     // Create endpoint interface to manage register and unregister
     mbed_client.create_interface();
 
@@ -302,4 +362,26 @@ void app_start(int /*argc*/, char* /*argv*/[]) {
     FunctionPointer2<void, M2MSecurity*, M2MObjectList> fp(&mbed_client, &MbedClient::test_register);
     minar::Scheduler::postCallback(fp.bind(register_object,object_list));
     minar::Scheduler::postCallback(&mbed_client,&MbedClient::test_update_register).period(minar::milliseconds(25000));
+
+#else
+
+    // Create list of Objects to register
+    client_object_list.push_back(button_resource->get_object());
+    client_object_list.push_back(led_resource->get_object());
+
+    // Issue register command.
+    FunctionPointer4<void, const MBedClientServerInfo&, NetworkStack*, ServiceClientCallback*, M2MObjectList& > fp(&service_client, &ServiceClient::initialize_and_register);
+    minar::Scheduler::postCallback(fp.bind(server_config, NULL, &serv_cch, client_object_list));
+    //minar::Scheduler::postCallback(&mbed_client,&MbedClient::test_update_register).period(minar::milliseconds(25000));
+
+    // XXX: following change is needed to "yotta_modules/core-util/core-util/FunctionPointer.h", line 508
+    // To me it looks like a bug in the header file, as the FunctionPointerBase's pre_bind() takes a reference, not pointer
+    //   FunctionPointerBind<R> bind(const A1 &a1, const A2 &a2, const A3 &a3, const A4 &a4) {
+    //      FunctionPointerBind<R> fp(*this);
+    // -    void * storage = this->pre_bind(&fp, (ArgStruct *)NULL, &_fp4_ops);
+    // +    void * storage = this->pre_bind(fp, (ArgStruct *)NULL, &_fp4_ops);
+    //      new(storage) ArgStruct(a1,a2,a3,a4);
+    //      return fp;
+    //   }
+#endif
 }
