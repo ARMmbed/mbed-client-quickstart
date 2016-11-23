@@ -19,7 +19,7 @@
 
 #include "sockets/UDPSocket.h"
 #include "EthernetInterface.h"
-#include "mbed-drivers/test_env.h"
+#include "greentea-client/test_env.h"
 #include "mbed-client/m2minterfacefactory.h"
 #include "mbed-client/m2mdevice.h"
 #include "mbed-client/m2minterfaceobserver.h"
@@ -217,7 +217,7 @@ public:
         trace_printer("Unregistered Object Successfully");
         _unregistered = true;
         _registered = false;
-        notify_completion(_unregistered);
+        GREENTEA_TESTSUITE_RESULT(_unregistered);
         minar::Scheduler::stop();
     }
 
